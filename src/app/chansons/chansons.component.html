@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="card shadow mb-4">                   
+    <div class="card-body"> 
+      <table class="table table-striped">
+        <thead *ngIf="chansons.length !== 0">
+          <tr>
+            <th>N°</th>
+            <th>ID</th>
+            <th>Titre</th>
+            <th>Type</th>
+            <th>Date de Sortie</th>
+          </tr>     
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let chanson of chansons; let index = index">
+            <td>{{ index + 1 }}</td>
+            <td>{{ chanson.idChanson }}</td>
+            <td>{{ chanson.titreChanson }}</td>
+            <td>{{ chanson.type }}</td>
+            <td>{{ chanson.dateSortie | date: 'dd/MM/yyyy' }}</td>
+            <td><a class="btn btn-success" [routerLink]="['/updateChanson',chanson.idChanson]">Modifier</a></td>
+            <td><button class="btn btn-danger" (click)="supprimerChanson(chanson)">Supprimer</button></td>
+          </tr> 
+        </tbody>
+        
+        <ng-container *ngIf="chansons.length === 0">
+          <tr>
+            <td colspan="6">
+              <h1>Aucune chanson trouvée !</h1>
+            </td>
+          </tr>
+        </ng-container>
+      </table>
+    </div>
+  </div>
+</div>
