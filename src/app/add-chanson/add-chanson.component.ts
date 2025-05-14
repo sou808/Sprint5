@@ -1,25 +1,40 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Chanson } from '../model/chanson.model';
+import { Categorie } from '../model/categorie.model';
 import { ChansonService } from '../services/chanson.service';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add-chanson',
-  imports: [FormsModule],
-  templateUrl: './add-chanson.component.html',
-  styleUrl: './add-chanson.component.css'
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './add-chanson.component.html'
 })
-export class AddChansonComponent {
+export class AddChansonComponent implements OnInit {
 
   newChanson = new Chanson();
-  message!: string;
+  categories!: Categorie[];
+  newIdCat!: number;
 
-  constructor(private chansonService: ChansonService) {}
+  constructor(
+    private chansonService: ChansonService,
+    private router: Router
+  ) {}
 
-  addChanson() {
-    this.chansonService.ajouterChanson(this.newChanson);
-    this.message = "Chanson " + this.newChanson.titreChanson + " ajoutée avec succès !";
+  ngOnInit() {
+    this.chansonService.listeCategories().subscribe(cats => {
+      this.categories = cats;
+      console.log(cats);
+    });
   }
 
+  addChanson() {
+    this.newChanson.categorie = this.categories.find(cat => cat.idCat == this.newIdCat)!;
+    this.chansonService.ajouterChanson(this.newChanson).subscribe(cha => {
+      console.log(cha);
+      this.router.navigate(['chansons']);
+    });
+  }
 }
-

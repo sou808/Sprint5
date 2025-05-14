@@ -1,42 +1,54 @@
 import { Component, OnInit } from '@angular/core';
 import { Chanson } from '../model/chanson.model';
-import { ActivatedRoute, Router } from '@angular/router'; // Ajout de Router
+import { ActivatedRoute, Router } from '@angular/router';
 import { ChansonService } from '../services/chanson.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Categorie } from '../model/categorie.model';
 
 @Component({
   selector: 'app-update-chanson',
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './update-chanson.component.html',
-  styles: []
+  styles: ``,
 })
 export class UpdateChansonComponent implements OnInit {
-  currentChanson = new Chanson(); // Chanson à modifier
+  currentChanson: Chanson = {
+    titreChanson: '',
+    type: '',
+    dateSortie: new Date(),
+    categorie: {} as Categorie,
+  };
+
+  categories!: Categorie[];
+  updatedCatId!: number;
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private router: Router, // Ajout de Router
+    private router: Router,
     private chansonService: ChansonService
   ) {}
 
-  ngOnInit() {
-    // Récupération de l'ID depuis les paramètres de l'URL
-    const chansonId = this.activatedRoute.snapshot.params['id'];
-    
-    // Recherche de la chanson par ID
-    this.currentChanson = this.chansonService.consulterChanson(chansonId);
-    
-    console.log(this.currentChanson);
+  ngOnInit(): void {
+    this.chansonService.listeCategories().subscribe((cats) => {
+      this.categories = cats;
+    });
+
+    this.chansonService
+      .consulterChanson(this.activatedRoute.snapshot.params['id'])
+      .subscribe((ch) => {
+        this.currentChanson = ch;
+        this.updatedCatId = this.currentChanson.categorie.idCat;
+      });
   }
 
-  // Méthode pour mettre à jour la chanson
   updateChanson() {
-    // Mise à jour de la chanson via le service
-    this.chansonService.updateChanson(this.currentChanson);
-    
-    // Redirection vers la liste des chansons après la mise à jour
-    this.router.navigate(['chansons']);
+    this.currentChanson.categorie = this.categories.find(
+      (cat) => cat.idCat == this.updatedCatId
+    )!;
+    this.chansonService.updateChanson(this.currentChanson).subscribe(() => {
+      this.router.navigate(['chansons']);
+    });
   }
 }

@@ -1,50 +1,53 @@
 import { Injectable } from '@angular/core';
 import { Chanson } from '../model/chanson.model';
+import { Categorie } from '../model/categorie.model';
+import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment'; // ✅ correct
+
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
+
+
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ChansonService {
-  chansons: Chanson[]; // tableau de chansons
-chanson!: Chanson;
-  constructor() {console.log("Création du premier Chanson!")
-    this.chansons = [
-       { idChanson: 1, titreChanson: "Die with a smile", type: "pop", dateSortie: new Date("01/15/2024") },
-      { idChanson: 2, titreChanson: "Hello", type: "pop", dateSortie: new Date("01/15/2017") },
-      { idChanson: 3, titreChanson: "Doctor", type: "pop", dateSortie: new Date("01/15/2025") }
-    ];
+  chansons!: Chanson[]; // tableau de Chanson
+  chanson!: Chanson;
+  categories!: Categorie[];
+
+  constructor(private http: HttpClient) {}
+
+  listeChansons(): Observable<Chanson[]> {
+    return this.http.get<Chanson[]>(environment.apiURL);
   }
 
-  listeChansons(): Chanson[] {
-    return this.chansons;
+  ajouterChanson(ch: Chanson): Observable<Chanson> {
+    return this.http.post<Chanson>(environment.apiURL, ch, httpOptions);
   }
 
-  ajouterChanson(chanson: Chanson) {
-    this.chansons.push(chanson);
+  supprimerChanson(id: number) {
+    const url = `${environment.apiURL}/${id}`;
+    return this.http.delete(url, httpOptions);
   }
- supprimerChanson( chan: Chanson){
-       
-       const index = this.chansons.indexOf(chan, 0);
-       if (index > -1) {
-         this.chansons.splice(index, 1);
-       }}
-  consulterChanson(id: number): Chanson {    
-  this.chanson = this.chansons.find(c => c.idChanson === id)!;
-  return this.chanson;
-}
-updateChanson(chanson: Chanson) {
-  // Chercher la chanson dans le tableau
-  const index = this.chansons.indexOf(chanson, 0);
-  
-  // Si la chanson existe dans le tableau
-  if (index > -1) {
-    // Supprimer l'ancienne chanson
-    this.chansons.splice(index, 1);
 
-    // Ajouter la chanson mise à jour à sa place
-    this.chansons.splice(index, 0, chanson);
+  consulterChanson(id: number): Observable<Chanson> {
+    const url = `${environment.apiURL}/${id}`;
+    return this.http.get<Chanson>(url);
   }
-}
 
+  listeCategories(): Observable<Categorie[]> {
+    return this.http.get<Categorie[]>(environment.apiURL + '/cat');
+  }
 
+  consulterCategorie(id: number): Categorie {
+    return this.categories.find((cat) => cat.idCat == id)!;
+  }
+
+  updateChanson(ch: Chanson): Observable<Chanson> {
+    return this.http.put<Chanson>(environment.apiURL, ch, httpOptions);
+  }
 }

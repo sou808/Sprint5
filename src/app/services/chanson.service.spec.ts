@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { Categorie } from '../model/categorie.model';
 
 import { ChansonService } from './chanson.service';
 

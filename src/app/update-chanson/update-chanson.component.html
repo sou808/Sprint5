@@ -2,30 +2,42 @@
   <div>
     <h2>Modifier une Chanson :</h2>
   </div>
+
   <form>
-    <!-- ID Chanson -->
     <div class="col-sm-2 col-md-2 col-lg-2">
       <label>ID Chanson</label>
-      <input readonly type="text" [(ngModel)]="currentChanson.idChanson" name="idChanson" class="form-control" disabled>
+      <input readonly type="text" [(ngModel)]="currentChanson.idChanson"
+             name="idChanson" class="form-control">
     </div>
 
-    <!-- Titre Chanson -->
     <div class="col-sm-4 col-md-4 col-lg-4">
       <label>Titre Chanson</label>
-      <input type="text" [(ngModel)]="currentChanson.titreChanson" name="titreChanson" class="form-control">
+      <input type="text" [(ngModel)]="currentChanson.titreChanson"
+             name="titreChanson" class="form-control">
     </div>
 
-    <!-- Type Chanson -->
     <div class="col-sm-2 col-md-2 col-lg-2">
-      <label>Type Chanson</label>
-      <input type="text" [(ngModel)]="currentChanson.type" name="type" class="form-control">
+      <label>Type</label>
+      <input type="text" [(ngModel)]="currentChanson.type"
+             name="type" class="form-control">
     </div>
 
-    <!-- Date de Sortie -->
     <div class="col-sm-4 col-md-4 col-lg-4">
-      <label>Date de Sortie</label>
-      <input type="date" [ngModel]="currentChanson.dateSortie | date: 'yyyy-MM-dd'"
-        (ngModelChange)="currentChanson.dateSortie = $event" name="dateSortie" class="form-control">
+      <label>Date de sortie</label>
+      <input type="date"
+             [ngModel]="currentChanson.dateSortie | date: 'yyyy-MM-dd'"
+             (ngModelChange)="currentChanson.dateSortie = $event"
+             name="dateSortie" class="form-control">
+    </div>
+
+    <div class="col-sm-4 col-md-4 col-lg-4">
+      <label>Catégorie</label>
+      <select class="form-control form-control-lg" id="idCat" name="idCat"
+              [(ngModel)]="updatedCatId">
+        <option *ngFor="let cat of categories" [value]="cat.idCat">
+          {{ cat.nomCat }}
+        </option>
+      </select>
     </div>
 
     <div class="mt-2">

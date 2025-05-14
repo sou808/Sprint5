@@ -1,26 +1,39 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Chanson } from '../model/chanson.model';
 import { ChansonService } from '../services/chanson.service';
-import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-chansons',
-  standalone:true,
-  imports:[CommonModule,RouterLink],
-  templateUrl: './chansons.component.html'
+  standalone: true,
+  imports: [CommonModule, RouterLink],
+  templateUrl: './chansons.component.html',
+  styleUrl: './chansons.component.css'
 })
 export class ChansonsComponent implements OnInit {
-  chansons!: Chanson[] ;
+  chansons!: Chanson[]; // tableau de chansons
 
-  constructor(private chansonService: ChansonService) {this.chansons = chansonService.listeChansons();}
-ngOnInit(): void {
-  
-}
+  constructor(private chansonService: ChansonService) {}
 
-  supprimerChanson(c: Chanson)
-{
-  let conf = confirm("Etes-vous sûr ?");
-     if (conf)
-       this.chansonService.supprimerChanson(c);
-}
+  ngOnInit() {
+    this.chargerChansons();
+  }
+
+  chargerChansons() {
+    this.chansonService.listeChansons().subscribe((chansons) => {
+      console.log(chansons);
+      this.chansons = chansons;
+    });
+  }
+
+  supprimerChanson(chanson: Chanson) {
+    let conf = confirm("Êtes-vous sûr de vouloir supprimer cette chanson ?");
+    if (conf && chanson.idChanson) {
+      this.chansonService.supprimerChanson(chanson.idChanson).subscribe(() => {
+        console.log("chanson supprimée");
+        this.chargerChansons();
+      });
+    }
+  }
 }
