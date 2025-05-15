@@ -29,19 +29,19 @@ export class UpdateChansonComponent implements OnInit {
     private router: Router,
     private chansonService: ChansonService
   ) {}
+ ngOnInit(): void {
+  // Fetch categories for songs (replace with your service method for categories, if applicable)
+  this.chansonService.listeCategories().subscribe(cats => {
+    console.log(cats);
+    this.categories = cats._embedded.categories; // Adjust according to the structure of your data
+  });
 
-  ngOnInit(): void {
-    this.chansonService.listeCategories().subscribe((cats) => {
-      this.categories = cats;
-    });
-
-    this.chansonService
-      .consulterChanson(this.activatedRoute.snapshot.params['id'])
-      .subscribe((ch) => {
-        this.currentChanson = ch;
-        this.updatedCatId = this.currentChanson.categorie.idCat;
-      });
-  }
+  // Fetch the song using the ID from the route
+  this.chansonService.consulterChanson(this.activatedRoute.snapshot.params['idChanson']).subscribe(prod => {
+    this.currentChanson = prod; // Assuming your song object is assigned to currentChanson
+    this.updatedCatId = this.currentChanson.categorie.idCat!; // Assuming `categorie` has a `idCat` property
+  });
+}
 
   updateChanson() {
     this.currentChanson.categorie = this.categories.find(

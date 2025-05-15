@@ -5,6 +5,8 @@ titreChanson? : string;
 type? : string;
 dateSortie? : Date ;
   categorie!: Categorie;
+
+  
 }
 /*export interface Chanson {
   idChanson?: number;

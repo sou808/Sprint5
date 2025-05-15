@@ -23,11 +23,12 @@ export class AddChansonComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit() {
-    this.chansonService.listeCategories().subscribe(cats => {
-      this.categories = cats;
-      console.log(cats);
-    });
+   ngOnInit(): void {
+    this.chansonService.listeCategories().
+          subscribe(cats => {console.log(cats);
+                             this.categories = cats._embedded.categories;
+                             }
+        );
   }
 
   addChanson() {

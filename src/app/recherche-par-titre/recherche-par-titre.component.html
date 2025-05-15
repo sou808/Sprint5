@@ -1,0 +1,53 @@
+<div class="container">
+
+  <!-- Formulaire de recherche en direct par titre -->
+  <form class="form-inline">
+    <div class="form-group mx-sm-3 mb-2 mt-2">
+      <label>Titre chanson en tapant</label>
+      <!-- ngModel pour liaison bidirectionnelle, searchTerm utilisé dans le pipe -->
+      <input #titre [(ngModel)]="searchTerm" name="searchTerm" class="form-control">
+    </div>
+  </form>
+
+  <!-- Liste des chansons filtrées dynamiquement par le pipe "searchChanson" -->
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Titre</th>
+            <th>Type</th>
+            <th>Date Sortie</th>
+            <th>Catégorie</th>
+          </tr>
+        </thead>
+
+        <!-- Boucle sur les chansons filtrées par le titre -->
+        <tbody>
+          @for (chanson of chansons | searchChanson: searchTerm; track chanson.idChanson) {
+            <tr>
+              <td>{{ chanson.idChanson }}</td>
+              <td>{{ chanson.titreChanson }}</td>
+              <td>{{ chanson.type }}</td>
+              <td>{{ chanson.dateSortie | date:'dd/MM/yyyy' }}</td>
+
+              <!-- Vérifie si la chanson a une catégorie associée -->
+              @if (chanson.categorie) {
+                <td>{{ chanson.categorie.nomCat }}</td>
+              } @else {
+                <td>PAS DE CATEGORIE</td>
+              }
+
+              <!-- Actions potentielles (désactivées ici) -->
+              <!--
+              <td><a class="btn btn-danger" (click)="supprimerChanson(chanson)">Supprimer</a></td>
+              <td><a class="btn btn-success" [routerLink]="['/updateChanson', chanson.idChanson]">Modifier</a></td>
+              -->
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

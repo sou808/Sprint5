@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Chanson } from '../model/chanson.model';
 import { ChansonService } from '../services/chanson.service';
 import { RouterLink } from '@angular/router';
-
+import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-chansons',
   standalone: true,
@@ -12,9 +12,10 @@ import { RouterLink } from '@angular/router';
   styleUrl: './chansons.component.css'
 })
 export class ChansonsComponent implements OnInit {
-  chansons!: Chanson[]; // tableau de chansons
+  chansons!: Chanson[];
 
-  constructor(private chansonService: ChansonService) {}
+  constructor(private chansonService : ChansonService,
+public authService: AuthService) { }
 
   ngOnInit() {
     this.chargerChansons();
@@ -36,4 +37,12 @@ export class ChansonsComponent implements OnInit {
       });
     }
   }
+
+  trackById(index: number, chanson: Chanson): number {
+    return chanson.idChanson!;
+  }
 }
+
+
+
+

@@ -1,1 +1,43 @@
-<p>recherche-par-categorie works!</p>
+<div class="container">
+
+  <div class="container">
+    <div class="col-sm-4 col-md-4 col-lg-4 mb-4">
+      <label>Categories </label>
+      <select class="form-control form-control-lg" id="idCat" name="idCat" [(ngModel)]="IdCategorie" (change)="onChange()">
+        @for(cat of categories;track cat.idCat)
+        {
+        <option value="{{cat.idCat}}"> {{cat.nomCat}} </option>
+        }
+      </select>
+    </div>
+
+  <div class="card shadow mb-4">                   
+    <div class="card-body"> 
+     <table class="table table-striped">
+        <tr> <th>Id</th><th>Nom</th> <th>Date Sortie</th>  <th>Catégorie</th></tr>          
+         @for (chanson of chansons; track chanson.idChanson)
+         {
+          
+          <tbody >
+            <tr >
+                <td>{{chanson.idChanson}}</td>
+               <td>{{chanson.titreChanson}}</td>
+               <td>{{chanson.dateSortie | date:'dd/MM/yyyy'}}</td>
+
+               @if(chanson.categorie){ 
+                <td>{{chanson.categorie.nomCat}}</td>  }
+               @else {
+                <td>PAS DE CATEGORIE</td>
+                }
+
+               <!-- <td><a class="btn btn-danger" (click)="supprimerProduit(chanson)">Supprimer</a></td> 
+               <td><a class="btn btn-success" [routerLink]="['/updateChanson',chanson.idChanson]">Modifier</a></td> -->
+             </tr>                                  
+          </tbody>
+         }   
+      
+
+    </table>
+    </div>
+  </div>
+</div>  
